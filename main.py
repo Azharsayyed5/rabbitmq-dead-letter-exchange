@@ -23,11 +23,10 @@ mq_channel.exchange_declare(exchange=xcx, durable=True, exchange_type="x-consist
 # Declare both type of queues
 queues = ['queue_1', 'queue_2', 'queue_3']
 for queue in queues:
-    parent_queue = queue # e.g "queue_1"
     dead_letter_queue = "delay_" + queue # e.g "delay_queue_1"
     
     mq_channel.queue_declare(
-        queue=parent_queue,
+        queue=queue,
         durable=True,
         arguments={'x-max-priority': 10}
     )
@@ -39,7 +38,7 @@ for queue in queues:
         }
     )
     # Bind normal queue with normal first exchange
-    mq_channel.queue_bind(exchange=xc, queue=parent_queue, routing_key="1")
+    mq_channel.queue_bind(exchange=xc, queue=queue, routing_key="1")
     # Bind dead letter queue with other exchange
     mq_channel.queue_bind(exchange=xcx, queue=dead_letter_queue, routing_key="1")
 
